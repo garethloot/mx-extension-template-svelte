@@ -1,0 +1,36 @@
+{
+  "compilerOptions": {
+    "target": "ES2023",
+    "module": "ESNext",
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "types": ["svelte", "vite/client", "node"],  // Add shims and Vite types
+    "lib": ["DOM", "ES2023"],
+    "moduleResolution": "bundler",  // Better for Vite
+    "paths": {
+      "$lib": [
+        "./src/lib"
+      ],
+      "$lib/*": [
+        "./src/lib/*"
+      ],
+      "$ui": [
+        "./src/ui"
+      ],
+      "$ui/*": [
+        "./src/ui/*"
+      ],
+      "$main": [
+        "./src/main"
+      ],
+      "$main/*": [
+        "./src/main/*"
+      ]
+    },
+  },
+  "include": [
+    "src/**/*",
+    "src/**/*.d.ts"  // Ensures .d.ts files are processed
+  ]
+}

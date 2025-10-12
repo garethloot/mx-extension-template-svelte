@@ -2,9 +2,8 @@ import { statSync, readdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import console from 'node:console';
 import fs from 'node:fs/promises';
-import { uiEntryPointList } from '../src/settings.ts';
 
-export function generateManifest() {
+export function generateManifest(uiEntryPointList) {
   const uiEntries = {};
   const uiDir = 'src/ui';
   const directories = readdirSync(uiDir).filter((item) =>
@@ -43,10 +42,10 @@ export function generateManifest() {
   };
 }
 
-export const generateManifestJson = (outDir) => ({
+export const generateManifestJson = (outDir, uiEntryPointList) => ({
   name: 'copy-manifest',
   writeBundle: async () => {
-    const manifest = generateManifest();
+    const manifest = generateManifest(uiEntryPointList);
     try {
       await fs.mkdir(outDir, { recursive: true });
       writeFileSync(`${outDir}/manifest.json`, JSON.stringify(manifest, null, 2));

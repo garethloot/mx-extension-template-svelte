@@ -3,7 +3,7 @@ import process from 'node:process';
 import dotenv from 'dotenv';
 import { defineConfig } from 'vite';
 import { svelte } from '@sveltejs/vite-plugin-svelte';
-import { generateManifestJson, copyToAppPlugin, getUiInputs } from './build/index.mjs';
+import { generateManifestJson, copyToAppPlugin, getUiInputs } from 'mx-extension-svelte-build';
 import { uiEntryPointList, EXTENSION_NAME } from './src/settings.ts';
 
 dotenv.config();
@@ -19,7 +19,7 @@ const extensionDirectoryName = 'extensions';
 export default defineConfig({
   plugins: [
     svelte({ emitCss: false }),
-    generateManifestJson(outDir, uiEntryPointList),
+    generateManifestJson(uiDir, outDir, uiEntryPointList),
     copyToAppPlugin(appDir, outDir, extensionDirectoryName)
   ],
   build: {

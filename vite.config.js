@@ -19,7 +19,7 @@ const extensionDirectoryName = 'extensions';
 export default defineConfig({
   plugins: [
     svelte({ emitCss: false }),
-    generateManifestJson(outDir),
+    generateManifestJson(outDir, uiEntryPointList),
     copyToAppPlugin(appDir, outDir, extensionDirectoryName)
   ],
   build: {

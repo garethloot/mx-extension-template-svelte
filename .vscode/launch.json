@@ -6,9 +6,9 @@
             "type": "msedge",
             "useWebView": true,
             "runtimeExecutable": "",
-            "runtimeArgs": ["/Users/garethloot/Mendix/Mx Power Toys-main/Mx Power Toys.mpr", "--enable-extension-development", "--enable-web-extensions"],
+            "runtimeArgs": ["<Add you path here>", "--enable-extension-development", "--enable-web-extensions"],
             "request": "launch",
-            "webRoot": "${workspaceFolder}/dist/MxPowerToys"
+            "webRoot": "${workspaceFolder}/dist/<ExtensionName>"
         }
     ]
 }

@@ -147,13 +147,74 @@ UI components are Svelte components that can be displayed in Studio Pro dialogs.
 - Has a corresponding entry in the `UIEntryPoints` enum
 - Exports a `component` that integrates with the Mendix Extensions API
 
+#### createUIEntryPointComponentFromSvelte Helper
+
+The `createUIEntryPointComponentFromSvelte` function in `src/lib/ui-helpers/createUIEntryPointComponentFromSvelte.ts` bridges Svelte components with the Mendix Extensions API. It:
+
+- **Injects global styles** (e.g., from `assets/style.css`) into the page for consistent theming.
+- **Parses URL search parameters** to extract props for the component.
+- **Mounts the Svelte component** into a DOM element (typically `#root`) when the component is loaded in Studio Pro.
+
+The `initProps` function is asynchronous, enabling complex prop injection such as:
+- **Studio Pro API access**: Pass `componentContext` (from the Mendix Extensions API) to access Studio Pro features like the project model or API endpoints.
+- **Entity data**: Fetch or compute entities, domain models, or other Mendix-specific data asynchronously.
+- **External APIs**: Perform HTTP requests, database queries, or other async operations to populate props.
+
+This allows you to handle async logic (e.g., data fetching) in `initProps`, resolving all props before mounting the Svelte component. The component itself receives fully resolved props, eliminating the need for awaits or loading states inside the Svelte code.
+
+For error handling, wrap async operations in `initProps` with try-catch blocks to manage failures gracefully (e.g., log errors or provide fallback props). Example with async prop injection and error handling:
+
+```typescript
+import Dialog from './Dialog.svelte';
+import { createUIEntryPointComponentFromSvelte } from '$lib/ui-helpers/createUIEntryPointComponentFromSvelte';
+
+export const component = createUIEntryPointComponentFromSvelte(Dialog, async (searchParams, componentContext) => {
+    try {
+        const message = searchParams.get('message') || 'No message provided';
+        // Async example: Fetch data from Studio Pro API or external source
+        const entities = await componentContext.getEntities();  // Hypothetical API call
+        const apiData = await fetch('/api/some-data').then(res => res.json());
+        
+        return { message, entities, apiData };
+    } catch (error) {
+        console.error('Error initializing props:', error);
+        return { message: 'Error loading data', entities: [], apiData: null };
+    }
+});
+```
+
+This approach keeps Svelte components focused on UI logic while delegating async and error-prone tasks to the helper. For custom logic, modify the `initProps` function to parse additional parameters or perform async operations.
+
 ### Build System
 
-The build system uses Vite with custom plugins to:
+The build system uses Vite with custom plugins from the `mx-extension-svelte-build` package to:
 - Generate the extension manifest
 - Bundle TypeScript and Svelte code
 - Copy assets to the output directory
 - Optionally deploy to Studio Pro
+
+#### Using mx-extension-svelte-build
+
+`mx-extension-svelte-build` is a custom npm package that provides build utilities for Mendix extensions. It's configured in [vite.config.js](vite.config.js) and includes the following functions:
+
+- `generateManifestJson(uiDir, outDir, uiEntryPointList)`: Creates a `manifest.json` file based on your UI entry points and extension settings.
+- `copyToAppPlugin(appDir, outDir, extensionDirectoryName)`: Copies the built extension to your Mendix Studio Pro app directory if `APP_DIR` is set in your `.env` file.
+- `getUiInputs(uiDir, uiEntryPointList)`: Dynamically generates input entries for UI components in the Vite build configuration.
+
+To customize the build process, modify the imports and usage in [vite.config.js](vite.config.js). For example, to add custom build options:
+
+```javascript
+import { generateManifestJson, copyToAppPlugin, getUiInputs } from 'mx-extension-svelte-build';
+
+// Use in plugins array
+plugins: [
+  svelte({ emitCss: false }),
+  generateManifestJson(uiDir, outDir, uiEntryPointList),
+  copyToAppPlugin(appDir, outDir, extensionDirectoryName)
+],
+```
+
+Ensure `mx-extension-svelte-build` is installed as a dev dependency (`npm install --save-dev mx-extension-svelte-build`). For more details, refer to the package documentation or source code.
 
 ## 📦 Building for Production
 

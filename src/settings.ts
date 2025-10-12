@@ -1,3 +1,7 @@
+import dotenv from 'dotenv';
+
+dotenv.config();
+
 export const EXTENSION_NAME = process.env.EXTENSION_NAME || 'MxExtensionTemplateSvelte';
 
 export enum UIEntryPoints {

@@ -1,12 +1,17 @@
 import path from 'node:path';
+import process from 'node:process';
 import { defineConfig } from 'vite';
 import { svelte } from '@sveltejs/vite-plugin-svelte';
 import { generateManifestJson, copyToAppPlugin, getUiInputs } from 'mx-extension-svelte-build';
-import { uiEntryPointList, EXTENSION_NAME, APP_DIR } from './src/settings.ts';
+import { uiEntryPointList, EXTENSION_NAME } from './src/settings.ts';
+import dotenv from 'dotenv';
 
-const extensionName = EXTENSION_NAME;
+dotenv.config();
+
+const extensionName =
+  process.env.VITE_EXTENSION_NAME || EXTENSION_NAME || 'MxExtensionTemplateSvelte';
 const outDir = `dist/${extensionName}`;
-const appDir = APP_DIR;
+const appDir = process.env.VITE_APP_DIR || '';
 const uiDir = 'src/ui';
 
 const extensionDirectoryName = 'extensions';
@@ -39,6 +44,9 @@ export default defineConfig({
       },
       preserveEntrySignatures: 'strict'
     }
+  },
+  define: {
+    __EXTENSION_NAME__: JSON.stringify(extensionName)
   },
   resolve: {
     alias: {

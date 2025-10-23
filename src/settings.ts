@@ -1,5 +1,4 @@
-export const EXTENSION_NAME = 'MxExtensionTemplateSvelte';
-export const APP_DIR = '/Users/garethloot/Mendix/Mx Power Toys-main';
+export const EXTENSION_NAME = import.meta?.env?.VITE_EXTENSION_NAME || 'MxExtensionTemplateSvelte';
 
 export enum UIEntryPoints {
     Dialog = 'dialog'

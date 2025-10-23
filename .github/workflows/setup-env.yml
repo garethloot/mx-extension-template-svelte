@@ -1,0 +1,29 @@
+name: Setup .env with Repository Name
+
+on:
+  repository_dispatch:
+    types: [repository_created]
+
+jobs:
+  setup-env:
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout the repository code
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Create or update the .env file with the repository name
+      - name: Write repository name to .env
+        run: |
+          echo "VITE_EXTENSION_NAME=${{ github.event.repository.name }}" > .env
+
+      # Commit and push the updated .env file
+      - name: Commit .env file
+        run: |
+          git config --global user.name 'GitHub Action'
+          git config --global user.email 'action@github.com'
+          git add .env
+          git commit -m "Add repository name to .env file"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -31,12 +31,6 @@ A modern template for building Mendix Studio Pro extensions using Svelte, TypeSc
    npm install
    ```
 
-3. Set up environment variables (optional):
-   ```bash
-   cp .env.example .env
-   # Edit .env with your specific settings
-   ```
-
 ## 🏗️ Project Structure
 
 ```
@@ -65,21 +59,15 @@ build/                 # Build scripts and utilities
 Configure your extension in `src/settings.ts`:
 
 ```typescript
-export const EXTENSION_NAME = process.env.EXTENSION_NAME || 'MxExtensionTemplateSvelte';
+export const EXTENSION_NAME = import.meta.env.VITE_EXTENSION_NAME || 'MxExtensionTemplateSvelte';
+export const APP_DIR = '/path/to/mendix/studio-pro/application';
 
 export enum UIEntryPoints {
     Dialog = 'dialog'
 }
 ```
 
-### Environment Variables
-
-Create a `.env` file in the root directory:
-
-```bash
-EXTENSION_NAME=YourExtensionName
-APP_DIR=/path/to/mendix/studio-pro/application
-```
+To customize these settings, update the values directly in `src/settings.ts` or set the `VITE_EXTENSION_NAME` environment variable during build (e.g., via your shell or CI/CD).
 
 ## 🚀 Development
 
@@ -101,7 +89,7 @@ APP_DIR=/path/to/mendix/studio-pro/application
 
 2. The extension will be built to `dist/[EXTENSION_NAME]/`
 
-3. If `APP_DIR` is set, the extension will be automatically copied to Studio Pro
+3. If `APP_DIR` is set in `src/settings.ts`, the extension will be automatically copied to Studio Pro
 
 ### Adding New UI Components
 
@@ -277,7 +265,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 **Build errors:**
 - Check that all dependencies are installed
 - Ensure TypeScript compilation passes: `npm run check`
-- Verify environment variables are set correctly
+- Verify settings in settings.ts are correct
 
 **UI components not loading:**
 - Check that UI entry points are registered in settings.ts

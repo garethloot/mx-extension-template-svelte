@@ -1,8 +1,5 @@
-import dotenv from 'dotenv';
-
-dotenv.config();
-
-export const EXTENSION_NAME = process.env.EXTENSION_NAME || 'MxExtensionTemplateSvelte';
+export const EXTENSION_NAME = 'MxExtensionTemplateSvelte';
+export const APP_DIR = '/Users/garethloot/Mendix/Mx Power Toys-main';
 
 export enum UIEntryPoints {
     Dialog = 'dialog'

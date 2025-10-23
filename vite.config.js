@@ -1,16 +1,12 @@
 import path from 'node:path';
-import process from 'node:process';
-import dotenv from 'dotenv';
 import { defineConfig } from 'vite';
 import { svelte } from '@sveltejs/vite-plugin-svelte';
 import { generateManifestJson, copyToAppPlugin, getUiInputs } from 'mx-extension-svelte-build';
-import { uiEntryPointList, EXTENSION_NAME } from './src/settings.ts';
-
-dotenv.config();
+import { uiEntryPointList, EXTENSION_NAME, APP_DIR } from './src/settings.ts';
 
 const extensionName = EXTENSION_NAME;
 const outDir = `dist/${extensionName}`;
-const appDir = process.env.APP_DIR;
+const appDir = APP_DIR;
 const uiDir = 'src/ui';
 
 const extensionDirectoryName = 'extensions';
